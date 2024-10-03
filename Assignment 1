@@ -1,0 +1,121 @@
+-- Inserting into MembershipPlans
+INSERT INTO MembershipPlans (MembershipPlanID, PlanName, Price) VALUES (1, 'Basic', 29.99);
+INSERT INTO MembershipPlans (MembershipPlanID, PlanName, Price) VALUES (2, 'Standard', 49.99);
+INSERT INTO MembershipPlans (MembershipPlanID, PlanName, Price) VALUES (3, 'Premium', 69.99);
+
+-- Inserting into Members
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (1, 'John Doe', 1);
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (2, 'Jane Smith', 2);
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (3, 'Mark Johnson', 3);
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (4, 'Emily Davis', 2);
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (5, 'Michael Brown', 1);
+
+-- Inserting into Trainers
+INSERT INTO Trainers (TrainerID, TrainerName, Specialization) VALUES (1, 'Chris Evans', 'Strength Training');
+INSERT INTO Trainers (TrainerID, TrainerName, Specialization) VALUES (2, 'Jessica Lee', 'Yoga');
+INSERT INTO Trainers (TrainerID, TrainerName, Specialization) VALUES (3, 'Sarah Johnson', 'Pilates');
+INSERT INTO Trainers (TrainerID, TrainerName, Specialization) VALUES (4, 'Michael Jordan', 'Cardio');
+
+-- Inserting into Locations
+INSERT INTO Locations (LocationID, LocationName) VALUES (1, 'Downtown Gym');
+INSERT INTO Locations (LocationID, LocationName) VALUES (2, 'Uptown Gym');
+INSERT INTO Locations (LocationID, LocationName) VALUES (3, 'Eastside Fitness Center');
+INSERT INTO Locations (LocationID, LocationName) VALUES (4, 'Westside Wellness Center');
+
+-- Inserting into Classes
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (1, 'Morning Yoga', 2, 1);
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (2, 'Strength Training 101', 1, 2);
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (3, 'Cardio Blast', 4, 3);
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (4, 'Pilates for Beginners', 3, 4);
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (5, 'Advanced Yoga', 2, 2);
+
+-- Inserting into MemberClasses
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (1, 1); -- John Doe attends Morning Yoga
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (1, 2); -- John Doe attends Strength Training 101
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (2, 5); -- Jane Smith attends Advanced Yoga
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (3, 3); -- Mark Johnson attends Cardio Blast
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (4, 4); -- Emily Davis attends Pilates for Beginners
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (5, 1); -- Michael Brown attends Morning Yoga
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (5, 3); -- Michael Brown attends Cardio Blast
+-- Create MembershipPlans table
+CREATE TABLE MembershipPlans (
+    MembershipPlanID NUMBER PRIMARY KEY,
+    PlanName VARCHAR2(50),
+    Price NUMBER(6, 2)
+);
+
+-- Create Members table with a foreign key referencing MembershipPlans
+CREATE TABLE Members (
+    MemberID NUMBER PRIMARY KEY,
+    MemberName VARCHAR2(100),
+    MembershipPlanID NUMBER,
+    FOREIGN KEY (MembershipPlanID) REFERENCES MembershipPlans(MembershipPlanID)
+);
+
+-- Create Trainers table
+CREATE TABLE Trainers (
+    TrainerID NUMBER PRIMARY KEY,
+    TrainerName VARCHAR2(100),
+    Specialization VARCHAR2(50)
+);
+
+-- Create Locations table
+CREATE TABLE Locations (
+    LocationID NUMBER PRIMARY KEY,
+    LocationName VARCHAR2(100)
+);
+
+-- Create Classes table with foreign keys referencing Trainers and Locations
+CREATE TABLE Classes (
+    ClassID NUMBER PRIMARY KEY,
+    ClassName VARCHAR2(100),
+    TrainerID NUMBER,
+    LocationID NUMBER,
+    FOREIGN KEY (TrainerID) REFERENCES Trainers(TrainerID),
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+);
+
+-- Create MemberClasses junction table for the many-to-many relationship between Members and Classes
+CREATE TABLE MemberClasses (
+    MemberID NUMBER,
+    ClassID NUMBER,
+    PRIMARY KEY (MemberID, ClassID),
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID),
+    FOREIGN KEY (ClassID) REFERENCES Classes(ClassID)
+);
+-- Inserting into MembershipPlans
+INSERT INTO MembershipPlans (MembershipPlanID, PlanName, Price) VALUES (1, 'Basic', 29.99);
+INSERT INTO MembershipPlans (MembershipPlanID, PlanName, Price) VALUES (2, 'Standard', 49.99);
+INSERT INTO MembershipPlans (MembershipPlanID, PlanName, Price) VALUES (3, 'Premium', 69.99);
+
+-- Inserting into Members
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (1, 'John Doe', 1);
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (2, 'Jane Smith', 2);
+INSERT INTO Members (MemberID, MemberName, MembershipPlanID) VALUES (3, 'Mark Johnson', 3);
+
+-- Inserting into Trainers
+INSERT INTO Trainers (TrainerID, TrainerName, Specialization) VALUES (1, 'Chris Evans', 'Strength Training');
+INSERT INTO Trainers (TrainerID, TrainerName, Specialization) VALUES (2, 'Jessica Lee', 'Yoga');
+
+-- Inserting into Locations
+INSERT INTO Locations (LocationID, LocationName) VALUES (1, 'Downtown Gym');
+INSERT INTO Locations (LocationID, LocationName) VALUES (2, 'Uptown Gym');
+
+-- Inserting into Classes
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (1, 'Morning Yoga', 2, 1);
+INSERT INTO Classes (ClassID, ClassName, TrainerID, LocationID) VALUES (2, 'Strength Training 101', 1, 2);
+
+-- Inserting into MemberClasses
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (1, 1);
+INSERT INTO MemberClasses (MemberID, ClassID) VALUES (2, 2);
+-- Update a member's plan
+UPDATE Members
+SET MembershipPlanID = 3
+WHERE MemberID = 1;
+-- Delete a class
+DELETE FROM Classes
+WHERE ClassID = 2;
+-- Retrieve members and their membership plan names
+SELECT Members.MemberName, MembershipPlans.PlanName
+FROM Members
+INNER JOIN MembershipPlans ON Members.MembershipPlanID = MembershipPlans.MembershipPlanID;
